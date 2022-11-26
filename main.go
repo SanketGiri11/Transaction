@@ -37,17 +37,25 @@ var locDetails = []LocationDetails{}
 
 func main() {
 
+	router := NewRouter()
+	http.Handle("/", router)
+
+	http.ListenAndServe(":9000", router)
+}
+
+func NewRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/transaction", getTransactions).Methods("GET")
 	router.HandleFunc("/transaction", postTransactions).Methods("POST")
-	router.HandleFunc("/statistics", statistics).Methods("GET")
-	router.HandleFunc("/transaction", deleteTransactions).Methods("DELETE")
+	router.HandleFunc("/statistics", Statistics).Methods("GET")
+	router.HandleFunc("/transaction", DeleteTransactions).Methods("DELETE")
 	router.HandleFunc("/location", GetLocation).Methods("GET")
 	router.HandleFunc("/location", AddLocation).Methods("POST")
 	router.HandleFunc("/location", UpdateLocation).Methods("PUT")
 
-	http.ListenAndServe(":9000", router)
+	// http.ListenAndServe(":9000", router)
+	return router
 }
 
 func getTransactions(w http.ResponseWriter, r *http.Request) {
@@ -104,7 +112,7 @@ func postTransactions(w http.ResponseWriter, r *http.Request) {
 }
 
 //GET the Statistic of Transaction
-func statistics(w http.ResponseWriter, r *http.Request) {
+func Statistics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("content-type", "application/json")
 
 	var res Response
@@ -142,7 +150,7 @@ func statistics(w http.ResponseWriter, r *http.Request) {
 }
 
 //Delete Transaction
-func deleteTransactions(w http.ResponseWriter, r *http.Request) {
+func DeleteTransactions(w http.ResponseWriter, r *http.Request) {
 	details = []Details{}
 	w.WriteHeader(http.StatusNoContent)
 }
